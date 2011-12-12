@@ -187,7 +187,7 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 				String recordType = ( String ) header.getHeaderValue( HEADER_KEY_TYPE );
 				String path = "";
 				path = header.getUrl();
-				if( !recordType.equals( "response" ) ) {
+				if( recordType != null && !recordType.equals( "response" ) ) {
 					if( recordType.equals( "warcinfo" ) ) {
 						path = "WARCINFO";
 					} else {
