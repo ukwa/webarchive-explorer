@@ -1,0 +1,7 @@
+The tool can be built with:
+
+	ant dist
+
+Following a successful build, the tool can be launched with:
+
+	java -jar dist/lib/ArchiveExplorer-*.jar <input.warc.gz>
