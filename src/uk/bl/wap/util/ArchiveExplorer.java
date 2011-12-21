@@ -19,6 +19,7 @@ import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -80,15 +81,24 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 		DefaultMutableTreeNode top = new DefaultMutableTreeNode( "Archive Explorer" );
 		this.createNodes( top );
 		tree = new JTree( top );
-		tree.getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
+		tree.getSelectionModel().setSelectionMode( TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION );
 		tree.addTreeSelectionListener( this );
 		tree.addMouseListener( new MouseAdapter() {
 			public void mouseClicked( MouseEvent e ) {
+				TreePath[] paths = tree.getSelectionModel().getSelectionPaths();
 				if( e.getClickCount() == 2 ) {
-					int row = tree.getRowForLocation( e.getX(), e.getY() );
-					TreePath path = tree.getPathForRow( row );
-					DefaultMutableTreeNode node = ( DefaultMutableTreeNode ) path.getPath()[ 2 ];
-					openExternal( node );
+					TreePath path = tree.getSelectionModel().getSelectionPath();
+					openExternal( path );
+				} else {
+					if( e.isMetaDown() ) {
+						if( paths.length == 1 ) {
+							TreePath path = paths[ 0 ];
+							exportFile( path );
+						}
+						if( paths.length > 1 ) {
+							exportFiles( paths );
+						}
+					}
 				}
 			}
 		} );
@@ -120,7 +130,8 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 
 	/**
 	 * 
-	 * @param args Specifies the path to the input file.
+	 * @param args
+	 *            Specifies the path to the input file.
 	 * 
 	 */
 	public static void main( String[] args ) {
@@ -211,7 +222,7 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 			if( entry.name.toLowerCase().matches( "^.+\\.(jpg|gif|png|bmp)$" ) ) {
 				StyledDocument doc = ( StyledDocument ) outputPane.getDocument();
 				Style style = doc.addStyle( "StyleName", null );
-				
+
 				byte[] image;
 				if( entry.name.matches( "^.+\\.bmp$" ) ) {
 					BufferedImage bmp = ImageIO.read( input );
@@ -221,7 +232,7 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 				} else {
 					image = IOUtils.toByteArray( input );
 				}
-				
+
 				StyleConstants.setIcon( style, new ImageIcon( image ) );
 				outputPane.setText( "" );
 				doc.insertString( 0, "ignored text", style );
@@ -264,18 +275,57 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 		return gz;
 	}
 
-	private void openExternal( DefaultMutableTreeNode node ) {
-		if( node == null )
-			return;
+	private void exportFile( TreePath path ) {
+		File output;
+		JFileChooser chooser = new JFileChooser();
+		ArchiveEntry entry = this.pathToEntry( path );
+		InputStream input = this.getPayloadStream( entry );
 
-		Object nodeInfo = null;
-		nodeInfo = node.getUserObject();
-		ArchiveEntry entry = null;
-		if( node.isLeaf() ) {
-			entry = ( ArchiveEntry ) nodeInfo;
-		} else {
-			entry = ( ArchiveEntry ) node.getLastLeaf().getUserObject();
+		String url = entry.header.getUrl();
+		String filename = url.substring( url.lastIndexOf( "/" ) + 1 );
+		if( filename.indexOf( "?" ) != -1 ) {
+			filename = filename.substring( 0, filename.indexOf( "?" ) );
 		}
+		chooser.setSelectedFile( new File( filename ) );
+
+		int response = chooser.showSaveDialog( ArchiveExplorer.this );
+		if( response == JFileChooser.APPROVE_OPTION ) {
+			output = chooser.getSelectedFile();
+			this.writeToFile( input, output );
+		}
+	}
+
+	private void exportFiles( TreePath[] paths ) {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory( new java.io.File( "." ) );
+		chooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+		chooser.setAcceptAllFileFilterUsed( false );
+
+		String separator = System.getProperty( "file.separator" );
+		String root;
+		ArchiveEntry entry;
+		InputStream input;
+		String url;
+		String filename;
+		int response = chooser.showOpenDialog( ArchiveExplorer.this );
+		if( response == JFileChooser.APPROVE_OPTION ) {
+			root = chooser.getCurrentDirectory() + separator + chooser.getSelectedFile().getName();
+			for( TreePath path : paths ) {
+				entry = this.pathToEntry( path );
+				input = this.getPayloadStream( entry );
+				url = entry.header.getUrl();
+				filename = root + separator + url.substring( url.lastIndexOf( "/" ) + 1 );
+				if( filename.indexOf( "?" ) != -1 ) {
+					filename = filename.substring( 0, filename.indexOf( "?" ) );
+				}
+				LOGGER.info( filename );
+				this.writeToFile( input, new File( filename ) );
+			}
+		}
+	}
+
+	private void openExternal( TreePath path ) {
+		ArchiveEntry entry = this.pathToEntry( path );
 		InputStream input = this.getPayloadStream( entry );
 		String url = entry.header.getUrl();
 		String filename = url.substring( url.lastIndexOf( "/" ) + 1 );
@@ -288,14 +338,40 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 				tmp = File.createTempFile( filename.split( "\\." )[ 0 ] + "___", "." + filename.split( "\\." )[ 1 ] );
 			}
 			tmp.deleteOnExit();
-			FileOutputStream output = new FileOutputStream( tmp );
-			IOUtils.copy( input, output );
-			output.flush();
-			output.close();
+			this.writeToFile( input, tmp );
 			Desktop desktop = Desktop.getDesktop();
 			desktop.open( tmp );
 		} catch( IOException e ) {
 			LOGGER.error( e.toString(), e );
 		}
+	}
+
+	private ArchiveEntry pathToEntry( TreePath path ) {
+		DefaultMutableTreeNode node = ( DefaultMutableTreeNode ) path.getPath()[ 2 ];
+		if( node == null )
+			return null;
+
+		Object nodeInfo = null;
+		nodeInfo = node.getUserObject();
+		ArchiveEntry entry = null;
+		if( node.isLeaf() ) {
+			entry = ( ArchiveEntry ) nodeInfo;
+		} else {
+			entry = ( ArchiveEntry ) node.getLastLeaf().getUserObject();
+		}
+
+		return entry;
+	}
+
+	private void writeToFile( InputStream input, File output ) {
+		try {
+			FileOutputStream stream = new FileOutputStream( output );
+			IOUtils.copy( input, stream );
+			stream.flush();
+			stream.close();
+		} catch( Exception e ) {
+			LOGGER.error( e.toString(), e );
+		}
+
 	}
 }

@@ -1,3 +1,5 @@
+SETUP:
+
 The tool can be built with:
 
 	ant dist
@@ -5,3 +7,14 @@ The tool can be built with:
 Following a successful build, the tool can be launched with:
 
 	java -jar dist/lib/ArchiveExplorer-*.jar <input.warc.gz>
+
+USAGE:
+
+URLs are display in the upper pane. Highlighting a URL will display:
+
+1. Header information in the lower-left pane.
+2. The payload of the record in the lower-right pane.
+
+Double-clicking a URL will open the payload externally (this relies on the operating system to decide which program is used).
+Right-clicking a single URL will prompt the user to save the file.
+Right-clicking multiple URLs will prompt the user for a directory in which to save all the selected files.
