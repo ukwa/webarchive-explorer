@@ -10,7 +10,7 @@ Following a successful build, the tool can be launched with:
 
 USAGE:
 
-URLs are display in the upper pane. Highlighting a URL will display:
+URLs are displayed in the upper pane. Highlighting a URL will display:
 
 1. Header information in the lower-left pane.
 2. The payload of the record in the lower-right pane.
