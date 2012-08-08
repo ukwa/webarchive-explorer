@@ -92,6 +92,7 @@ class Browser extends Region {
 
         // load the home page        
         webEngine.load("http://en.wikipedia.org/wiki/Main_Page");
+        
 
         for (int i = 0; i < captions.length; i++) {
             final Hyperlink hpl = hpls[i] = new Hyperlink(captions[i]);
@@ -108,6 +109,7 @@ class Browser extends Region {
                             @Override
                             public void changed(ObservableValue<? extends State>
                                 ov, State oldState, State newState) {
+                            	System.out.println("State: "+newState);
                                 if (!hpl.getText().equals("Forums")) { 
                                     toolBar.getChildren().removeAll(showAll, 
                                             hideAll); }
@@ -196,4 +198,5 @@ class Browser extends Region {
     protected double computePrefHeight(double width) {
         return 600;
     }
+    
 }

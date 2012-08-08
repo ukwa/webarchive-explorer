@@ -181,7 +181,7 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 	}
 
 	private void showArchiveRecord( ArchiveEntry entry ) {
-		InputStream input = archiveIndex.getPayloadStream( entry );
+		InputStream input = archiveIndex.getResource( entry );
 		try {
 			if( entry.name.toLowerCase().matches( "^.+\\.(jpg|gif|png|bmp)$" ) ) {
 				StyledDocument doc = ( StyledDocument ) outputPane.getDocument();
@@ -219,7 +219,7 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 		File output;
 		JFileChooser chooser = new JFileChooser();
 		ArchiveEntry entry = this.pathToEntry( path );
-		InputStream input = archiveIndex.getPayloadStream( entry );
+		InputStream input = archiveIndex.getResource( entry );
 		// FIXME I removed this while refactoring: headerPane.setText( headers.toString() );
 
 		String url = entry.header.getUrl();
@@ -253,7 +253,7 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 			root = chooser.getCurrentDirectory() + separator + chooser.getSelectedFile().getName();
 			for( TreePath path : paths ) {
 				entry = this.pathToEntry( path );
-				input = archiveIndex.getPayloadStream( entry );
+				input = archiveIndex.getResource( entry );
 				url = entry.header.getUrl();
 				filename = root + separator + url.substring( url.lastIndexOf( "/" ) + 1 );
 				if( filename.indexOf( "?" ) != -1 ) {
@@ -267,7 +267,7 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 
 	private void openExternal( TreePath path ) {
 		ArchiveEntry entry = this.pathToEntry( path );
-		InputStream input = archiveIndex.getPayloadStream( entry );
+		InputStream input = archiveIndex.getResource( entry );
 		String url = entry.header.getUrl();
 		String filename = url.substring( url.lastIndexOf( "/" ) + 1 );
 		File tmp;

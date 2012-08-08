@@ -3,6 +3,7 @@ package simpleswingbrowser;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker.State;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -10,12 +11,16 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import uk.bl.wap.util.ArchiveURLStreamHandlerFactory;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -118,6 +123,21 @@ public class SimpleSwingBrowser implements Runnable {
                         });
                     }
                 });
+                
+                engine.getLoadWorker().stateProperty().addListener(
+                        new ChangeListener<Object>() {
+                            @Override
+                            public void changed(ObservableValue<?> observable,
+                                    Object oldValue, Object newValue) {
+                                State oldState = (State)oldValue;
+                                State newState = (State)newValue;
+                                if (State.SUCCEEDED == newValue) {
+                                    captureView();
+                                	engine.executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
+                                }
+                            }
+                        });
+
 
                 engine.getLoadWorker()
                         .exceptionProperty()
@@ -139,6 +159,19 @@ public class SimpleSwingBrowser implements Runnable {
                                 }
                             }
                         });
+                
+             // hide webview scrollbars whenever they appear.
+                /*
+                view.getChildrenUnmodifiable().addListener(new ListChangeListener<Node>() {
+                  @Override public void onChanged(Change<? extends Node> change) {
+                    Set<Node> deadSeaScrolls = webView.lookupAll(".scroll-bar");
+                    for (Node scroll : deadSeaScrolls) {
+                      scroll.setVisible(false);
+                    }
+                  }
+                });
+                */
+
 
                 jfxPanel.setScene(new Scene(view));
             }
@@ -179,6 +212,20 @@ public class SimpleSwingBrowser implements Runnable {
         frame.pack();
         frame.setVisible(true);
     }
+    
+    private void captureView() {
+    	BufferedImage bi = new BufferedImage(jfxPanel.getWidth(), jfxPanel.getHeight(), BufferedImage.TYPE_INT_ARGB);
+    	Graphics graphics = bi.createGraphics();
+    	jfxPanel.paint(graphics);
+    	try {
+    	    ImageIO.write(bi, "PNG", new File("demo.png"));
+    	} catch (IOException e) {
+    	    e.printStackTrace();
+    	}
+    	graphics.dispose();
+    	bi.flush();
+    }
+
 
     public static void main(String[] args) {
     	URL.setURLStreamHandlerFactory(new ArchiveURLStreamHandlerFactory(args[0]));

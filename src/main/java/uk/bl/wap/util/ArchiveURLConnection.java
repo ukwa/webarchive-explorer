@@ -44,10 +44,7 @@ public class ArchiveURLConnection extends URLConnection {
 	@Override
 	public String getHeaderField(String name) {
 		if( entry.header == null ) return "";
-		Object v = entry.header.getHeaderValue(name);
-		if( v instanceof String )
-			return (String)v;
-		return null;
+		return archiveIndex.getResource(entry).getHttpHeaders().get(name);
 	}
 
 	/* (non-Javadoc)
@@ -56,14 +53,13 @@ public class ArchiveURLConnection extends URLConnection {
 	@Override
 	public Map<String, List<String>> getHeaderFields() {
 		Map<String, List<String>> hfm = new HashMap<String, List<String>>();
+		Map<String, String> headers = archiveIndex.getResource(entry).getHttpHeaders();
 		if( entry.header == null ) return hfm;
-			for( String hf : entry.header.getHeaderFieldKeys() ) {
-			Object v = entry.header.getHeaderValue(hf);
-			if( v instanceof String ) {
-				ArrayList<String> vlist = new ArrayList<String>();
-				vlist.add( (String)v);
-				hfm.put(hf,vlist);
-			}
+			for( String hf : headers.keySet() ) {
+			String v = headers.get(hf);
+			ArrayList<String> vlist = new ArrayList<String>();
+			vlist.add( (String)v);
+			hfm.put(hf,vlist);
 		}
 		return hfm;
 	}
@@ -74,7 +70,7 @@ public class ArchiveURLConnection extends URLConnection {
 	@Override
 	public InputStream getInputStream() throws IOException {
 		connect();
-		return archiveIndex.getPayloadStream(entry);
+		return archiveIndex.getResource(entry);
 	}
 
 }

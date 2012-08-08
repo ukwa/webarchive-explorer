@@ -24,6 +24,9 @@ import org.archive.io.ArchiveRecordHeader;
 import org.archive.io.GZIPMembersInputStream;
 import org.archive.io.arc.ARCReaderFactory;
 import org.archive.io.warc.WARCReaderFactory;
+import org.archive.wayback.core.Resource;
+import org.archive.wayback.exception.ResourceNotAvailableException;
+import org.archive.wayback.resourcestore.resourcefile.ResourceFactory;
 
 import uk.bl.wap.util.warc.WARCRecordUtils;
 
@@ -104,8 +107,22 @@ public class ArchiveIndex {
 		System.out.println("Not Found: "+path);
 		return null;
 	}
+	
+	public Resource getResource( ArchiveEntry entry ) {
+		try {
+			Resource r = ResourceFactory.getResource(file, entry.header.getOffset());
+			return r;
+		} catch (ResourceNotAvailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-	public InputStream getPayloadStream( ArchiveEntry entry ) {
+	private InputStream getPayloadStream( ArchiveEntry entry ) {
 		if( entry.header == null ) return null;
 		Long offset = entry.header.getOffset();
 		RandomAccessFile random = null;
