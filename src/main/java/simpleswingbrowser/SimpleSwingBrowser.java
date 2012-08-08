@@ -11,6 +11,9 @@ import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 
 import javax.swing.*;
+
+import uk.bl.wap.util.ArchiveURLStreamHandlerFactory;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.net.MalformedURLException;
@@ -171,13 +174,14 @@ public class SimpleSwingBrowser implements Runnable {
 
         initComponents();
 
-        loadURL("http://oracle.com");
+        loadURL("http://en.wikipedia.org/wiki/Main_Page");
 
         frame.pack();
         frame.setVisible(true);
     }
 
     public static void main(String[] args) {
+    	URL.setURLStreamHandlerFactory(new ArchiveURLStreamHandlerFactory(args[0]));
         SwingUtilities.invokeLater(new SimpleSwingBrowser());
     }
 }

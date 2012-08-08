@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -85,15 +87,21 @@ public class ArchiveIndex {
 		return this.entries;
 	}
 	
-	public ArchiveEntry lookup( String path ) {
+	public ArchiveEntry lookup( URL path ) {
 		if( path == null ) return null;
 		//System.out.println("Looking up: "+path);
 		for( ArchiveEntry entry : this.getEntries() ) {
-			//System.out.println("Comparing with: "+entry.getName());
-			if( path.equalsIgnoreCase(entry.getName())) 
-				return entry;
+			try {
+				URL item = new URL(entry.name);
+				//System.out.println("Comparing with: "+entry.getName());
+				if( item.sameFile(path)) {
+					System.out.println("Found: "+path);
+					return entry;
+				}
+			} catch (MalformedURLException e) {
+			}
 		}
-		System.out.println("Failed to look up: "+path);
+		System.out.println("Not Found: "+path);
 		return null;
 	}
 

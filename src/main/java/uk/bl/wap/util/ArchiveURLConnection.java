@@ -28,7 +28,7 @@ public class ArchiveURLConnection extends URLConnection {
 	public ArchiveURLConnection(ArchiveIndex archiveIndex, URL u) {
 		super(u);
 		this.archiveIndex = archiveIndex;
-		this.entry = archiveIndex.lookup(this.getURL().toString());
+		this.entry = archiveIndex.lookup(getURL());
 	}
 
 	@Override
