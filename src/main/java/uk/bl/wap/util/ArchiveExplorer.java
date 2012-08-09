@@ -45,6 +45,7 @@ import org.archive.io.ArchiveRecordHeader;
 import org.archive.io.GZIPMembersInputStream;
 import org.archive.io.arc.ARCReaderFactory;
 import org.archive.io.warc.WARCReaderFactory;
+import org.archive.wayback.core.Resource;
 
 import uk.bl.wap.util.warc.WARCRecordUtils;
 
@@ -181,8 +182,14 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 	}
 
 	private void showArchiveRecord( ArchiveEntry entry ) {
-		InputStream input = archiveIndex.getResource( entry );
+		Resource input = archiveIndex.getResource( entry );
+		if( input == null ) {
+			headerPane.setText( entry.header.toString() );
+			return;
+		}
+		//
 		try {
+			headerPane.setText( input.getHttpHeaders().toString() );
 			if( entry.name.toLowerCase().matches( "^.+\\.(jpg|gif|png|bmp)$" ) ) {
 				StyledDocument doc = ( StyledDocument ) outputPane.getDocument();
 				Style style = doc.addStyle( "StyleName", null );
@@ -219,8 +226,7 @@ public class ArchiveExplorer extends JPanel implements TreeSelectionListener {
 		File output;
 		JFileChooser chooser = new JFileChooser();
 		ArchiveEntry entry = this.pathToEntry( path );
-		InputStream input = archiveIndex.getResource( entry );
-		// FIXME I removed this while refactoring: headerPane.setText( headers.toString() );
+		Resource input = archiveIndex.getResource( entry );
 
 		String url = entry.header.getUrl();
 		String filename = url.substring( url.lastIndexOf( "/" ) + 1 );

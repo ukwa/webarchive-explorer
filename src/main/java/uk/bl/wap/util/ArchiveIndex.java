@@ -114,10 +114,10 @@ public class ArchiveIndex {
 			return r;
 		} catch (ResourceNotAvailableException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return null;
 	}

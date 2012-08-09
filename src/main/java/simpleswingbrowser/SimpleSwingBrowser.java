@@ -37,6 +37,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -96,7 +99,7 @@ public class SimpleSwingBrowser implements Runnable {
 
                 WebView view = new WebView();
                 engine = view.getEngine();
-
+                
                 engine.titleProperty().addListener(new ChangeListener<String>() {
                     @Override
                     public void changed(ObservableValue<? extends String> observable, String oldValue, final String newValue) {
@@ -148,8 +151,9 @@ public class SimpleSwingBrowser implements Runnable {
                                 State oldState = (State)oldValue;
                                 State newState = (State)newValue;
                                 if (State.SUCCEEDED == newValue) {
-                                    captureView();
-                                	engine.executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
+                                	System.out.println("Status: "+newValue);
+                                    //captureView();
+                                	//engine.executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
                                 }
                             }
                         });
@@ -303,6 +307,7 @@ public class SimpleSwingBrowser implements Runnable {
 
     public static void main(String[] args) {
     	URL.setURLStreamHandlerFactory(new ArchiveURLStreamHandlerFactory(args[0]));
+        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
         SwingUtilities.invokeLater(new SimpleSwingBrowser());
     }
 }
