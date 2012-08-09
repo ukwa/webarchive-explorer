@@ -13,6 +13,17 @@ import javafx.scene.web.WebView;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.apache.batik.dom.GenericDOMImplementation;
+import org.apache.batik.svggen.SVGGraphics2D;
+import org.apache.batik.svggen.SVGGraphics2DIOException;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
 
 import uk.bl.wap.util.ArchiveURLStreamHandlerFactory;
 
@@ -20,7 +31,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -224,6 +240,64 @@ public class SimpleSwingBrowser implements Runnable {
     	}
     	graphics.dispose();
     	bi.flush();
+    	//
+    	try {
+	    	Document doc = this.engine.getDocument();
+	    	//set up a transformer
+	    	TransformerFactory transfac = TransformerFactory.newInstance();
+	    	Transformer trans = transfac.newTransformer();
+	    	trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+	    	trans.setOutputProperty(OutputKeys.INDENT, "yes");
+	
+	    	//create string from xml tree
+	    	OutputStreamWriter sw = new OutputStreamWriter(new FileOutputStream("test.xhtml"), "UTF-8");
+	    	StreamResult result = new StreamResult(sw);
+	    	DOMSource source = new DOMSource(doc);
+	    	trans.transform(source, result);
+	    	sw.flush();
+	    	sw.close();
+    	} catch ( Exception e ) {
+    		e.printStackTrace();
+    	}
+    	//
+    	// Get a DOMImplementation.
+        DOMImplementation domImpl =
+            GenericDOMImplementation.getDOMImplementation();
+
+        // Create an instance of org.w3c.dom.Document.
+        String svgNS = "http://www.w3.org/2000/svg";
+        Document document = domImpl.createDocument(svgNS, "svg", null);
+
+        // Create an instance of the SVG Generator.
+        SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+
+        // Ask the test to render into the SVG Graphics2D implementation.
+        jfxPanel.paint(svgGenerator);
+
+        // Finally, stream out SVG to the standard output using
+        // UTF-8 encoding.
+        boolean useCSS = true; // we want to use CSS style attributes
+        Writer out;
+		try {
+			out = new OutputStreamWriter(new FileOutputStream("test.svg"), "UTF-8");
+		} catch (UnsupportedEncodingException | FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+        try {
+			svgGenerator.stream(out, useCSS);
+		} catch (SVGGraphics2DIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        try {
+        	out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 
