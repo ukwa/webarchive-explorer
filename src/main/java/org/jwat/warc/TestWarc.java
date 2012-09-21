@@ -71,7 +71,7 @@ public class TestWarc {
 		System.out.println("  ConcurrentTo: " + record.header.warcConcurrentToList);
 		System.out.println("      RefersTo: " + record.header.warcRefersToUri);
 		System.out.println("     TargetUri: " + record.header.warcTargetUriUri);
-		System.out.println("   WarcInfo-Id: " + record.header.warcWarcInfoIdUri);
+//		System.out.println("   WarcInfo-Id: " + record.header.warcWarcInfoIdUri);
 		System.out.println("   BlockDigest: " + record.header.warcBlockDigest);
 		System.out.println(" PayloadDigest: " + record.header.warcPayloadDigest);
 		System.out.println("IdentPloadType: " + record.header.warcIdentifiedPayloadType);
