@@ -73,7 +73,7 @@
 		<dependency>
 		 <groupId>org.jwat</groupId>
 		 <artifactId>jwat-distribution</artifactId>
-		 <version>0.9.1</version>
+		 <version>1.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -135,12 +135,13 @@
 			<url>http://builds.archive.org:8080/maven2</url>
 			<layout>default</layout>
 		</repository>
-		
+<!--
         <repository>
             <id>sonatype-nexus-snapshots</id>
             <name>Sonatype Nexus Snapshots</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
+ -->  
     </repositories>
 
 </project>
