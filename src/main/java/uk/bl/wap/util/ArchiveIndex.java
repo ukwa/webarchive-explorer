@@ -122,28 +122,4 @@ public class ArchiveIndex {
 		return null;
 	}
 
-	private InputStream getPayloadStream( ArchiveEntry entry ) {
-		if( entry.header == null ) return null;
-		Long offset = entry.header.getOffset();
-		RandomAccessFile random = null;
-		GZIPMembersInputStream gz = null;
-		StringBuilder headers = new StringBuilder();
-		try {
-			random = new RandomAccessFile( file, "r" );
-			random.seek( offset );
-			if( random.getFilePointer() != offset ) {
-				throw new IOException( "Failed to seek to " + offset );
-			}
-			gz = new GZIPMembersInputStream( new FileInputStream( random.getFD() ) );
-			gz.setEofEachMember( true );
-			headers.append( WARCRecordUtils.getHeaders( gz, false ) );
-			if( entry.header.getHeaderValue( HEADER_KEY_TYPE ) != null ) {
-				headers.append( WARCRecordUtils.getHeaders( gz, true ) );
-			}
-		} catch( Exception e ) {
-			//LOGGER.error( e.toString(), e );
-		}
-		return gz;
-	}
-
 }
