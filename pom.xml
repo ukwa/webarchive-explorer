@@ -22,14 +22,14 @@
 			<artifactId>javafx-runtime</artifactId>
 <version>${javafx.version}</version>
 		</dependency>
-	 -->
-<dependency>
-<groupId>com.oracle</groupId>
-<artifactId>javafx</artifactId>
-   <version>2.0</version>
-<systemPath>${java.home}/lib/jfxrt.jar</systemPath>
-<scope>system</scope>
-</dependency>  
+    -->
+   <dependency>
+      <groupId>com.oracle</groupId>
+      <artifactId>javafx</artifactId>
+      <version>2.0</version>
+      <scope>system</scope>
+      <systemPath>${java.home}/lib/jfxrt.jar</systemPath>
+   </dependency>
 		<dependency>
 			<groupId>org.archive.heritrix</groupId>
 			<artifactId>heritrix-commons</artifactId>
@@ -127,7 +127,7 @@
 			<snapshots>
 				<enabled>true</enabled>
 				<updatePolicy>never</updatePolicy>
-				<checksumPolicy>fail</checksumPolicy>
+				<checksumPolicy>warn</checksumPolicy>
 			</snapshots>
 
 			<id>internetarchive</id>
