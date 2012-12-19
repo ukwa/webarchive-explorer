@@ -71,7 +71,7 @@ class Browser extends Region {
         "Help"
     };
     private static String[] urls = new String[]{
-        "http://en.wikipedia.org/wiki/Main_Page",
+        "http://news.bbc.co.uk/",
         "http://blogs.oracle.com/",
         "http://forums.oracle.com/forums/",
         "http://www.oracle.com/partners/index.html",
@@ -91,7 +91,7 @@ class Browser extends Region {
         getStyleClass().add("browser");
 
         // load the home page        
-        webEngine.load("http://en.wikipedia.org/wiki/Main_Page");
+        webEngine.load("http://news.bbc.co.uk/");
         
 
         for (int i = 0; i < captions.length; i++) {
