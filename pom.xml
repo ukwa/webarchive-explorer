@@ -5,77 +5,25 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <groupId>uk.bl.wap.archive-explorer</groupId>
-    <artifactId>ArchiveExplorer</artifactId>
+    <groupId>uk.bl.wa.warc-explorer</groupId>
+    <artifactId>warc-explorer-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-    <name>Archive Explorer</name>
+    <name>Web Archive Explorer Project</name>
     <organization>
     	<name>The UK Web Archive</name>
     </organization>
 
-
-	<dependencies>
-	<!-- 
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>javafx-runtime</artifactId>
-<version>${javafx.version}</version>
-		</dependency>
-    -->
-   <dependency>
-      <groupId>com.oracle</groupId>
-      <artifactId>javafx</artifactId>
-      <version>2.0</version>
-      <scope>system</scope>
-      <systemPath>${java.home}/lib/jfxrt.jar</systemPath>
-   </dependency>
-		<dependency>
-			<groupId>org.archive.heritrix</groupId>
-			<artifactId>heritrix-commons</artifactId>
-			<version>3.1.0</version>
-		</dependency>
-		<dependency>
-		 <groupId>org.archive.wayback</groupId>
-		 <artifactId>wayback-core</artifactId>
-		 <version>1.7.0</version>
-		</dependency>
-		<dependency>
-		 <groupId>batik</groupId>
-		 <artifactId>batik-svggen</artifactId>
-		 <version>1.6</version>
-		</dependency>
-		<dependency>
-		 <groupId>batik</groupId>
-		 <artifactId>batik-awt-util</artifactId>
-		 <version>1.6</version>
-		</dependency>
-		<dependency>
-		 <groupId>batik</groupId>
-		 <artifactId>batik-svg-dom</artifactId>
-		 <version>1.6</version>
-		</dependency>
-		<dependency>
-		 <groupId>batik</groupId>
-		 <artifactId>batik-xml</artifactId>
-		 <version>1.6</version>
-		</dependency>
-		<dependency>
-		 <groupId>batik</groupId>
-		 <artifactId>batik-dom</artifactId>
-		 <version>1.6</version>
-		</dependency>
-		<dependency>
-		 <groupId>batik</groupId>
-		 <artifactId>batik-util</artifactId>
-		 <version>1.6</version>
-		</dependency>
-		<dependency>
-		 <groupId>org.jwat</groupId>
-		 <artifactId>jwat-distribution</artifactId>
-		 <version>1.0.0-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
+   <developers>
+      <developer>
+         <id>anjackson</id>
+         <name>Andy Jackson</name>
+         <email>Andrew.Jackson@bl.uk</email>
+         <organization>The British Library</organization>
+         <organizationUrl>http://www.bl.uk</organizationUrl>
+      </developer>
+   </developers>
 
     <build>
         <plugins>
@@ -88,28 +36,6 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-4</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/main/assembly/assembly.xml</descriptor>
-                    </descriptors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <!-- this is used for inheritance merges -->
-                        <phase>package</phase>
-                        <!-- append to the packaging phase. -->
-                        <goals>
-                            <goal>single</goal>
-                            <!-- goals == mojos -->
-                        </goals>
-                    </execution>
-                </executions>
-
             </plugin>
         </plugins>
     </build>
@@ -135,13 +61,12 @@
 			<url>http://builds.archive.org:8080/maven2</url>
 			<layout>default</layout>
 		</repository>
-<!--
-        <repository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
- -->  
     </repositories>
 
+    <modules>
+       <module>warc-explorer-app</module>
+       
+       <module>warc-explorer-player</module>
+       <module>warc-explorer-wayback</module>
+    </modules>
 </project>

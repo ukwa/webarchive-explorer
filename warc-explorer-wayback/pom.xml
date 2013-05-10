@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+    <groupId>uk.bl.wa.warc-explorer</groupId>
+    <artifactId>warc-explorer-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+   </parent>
+
+   <artifactId>warc-explorer-wayback</artifactId>
+   <packaging>war</packaging>
+
+   <name>Web Archive Embeddedable Wayback</name>
+   <description>Wayback Webapp modified so it can be run as an embedded application.</description>
+
+   <dependencies>
+      <dependency>
+         <groupId>org.archive.wayback</groupId>
+         <artifactId>wayback-webapp</artifactId>
+         <version>1.7.1-SNAPSHOT</version>
+         <type>war</type>
+         <scope>runtime</scope>
+      </dependency>
+   </dependencies>
+
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>2.3</version>
+            <configuration>
+               <dependentWarExcludes>WEB-INF/lib/jsp*.jar</dependentWarExcludes>
+               <overlays>
+                  <!-- first overlay takes precedence... -->
+                  <overlay>
+                     <!-- empty groupId/artifactId represents the current 
+                        build -->
+                  </overlay>
+                  <overlay>
+                     <groupId>org.archive.wayback</groupId>
+                     <artifactId>wayback-webapp</artifactId>
+                  </overlay>
+               </overlays>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>9.0.3.v20130506</version>
+            <configuration>
+               <httpConnector>
+                  <port>18080</port>
+               </httpConnector>
+               <connectors>
+                  <connector
+                     implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                     <port>18090</port>
+                     <maxIdleTime>60000</maxIdleTime>
+                  </connector>
+               </connectors>
+               <stopPort>19999</stopPort>
+               <webAppSourceDirectory>${basedir}/target/${project.build.finalName}</webAppSourceDirectory>
+               <systemProperties>
+                  <systemProperty>
+                     <name>wayback.warc.dir</name>
+                     <value>${basedir}/warcs</value>
+                  </systemProperty>
+                  <systemProperty>
+                     <name>wayback.work.dir</name>
+                     <value>${basedir}/wayback-work</value>
+                  </systemProperty>
+               </systemProperties>
+            </configuration>
+         </plugin>
+      </plugins>
+      <resources>
+         <resource>
+            <directory>src/main/webapp/WEB-INF</directory>
+            <includes>
+               <include>**/filter.properties</include>
+               <include>**/log4j.properties</include>
+            </includes>
+         </resource>
+      </resources>
+
+   </build>
+
+</project>
