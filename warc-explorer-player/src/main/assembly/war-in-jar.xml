@@ -9,6 +9,9 @@
   <dependencySets>
     <dependencySet>
       <outputDirectory>/</outputDirectory>
+      <excludes>
+        <exclude>uk.bl.wa.warc-explorer:warc-explorer-wayback</exclude>
+      </excludes>
       <useProjectArtifact>true</useProjectArtifact>
       <unpack>true</unpack>
       <scope>runtime</scope>
