@@ -13,6 +13,8 @@ Run as:
 
 Keep an eye on the logs until the indexer has finished processing your ARC and WARC files, and then go to [http://localhost:18080/wayback/](http://localhost:18080/wayback/) to look at the resources in your warc files.
 
+You can change the server hostname if you wish, using the -s command. The -i command can be used to control index caching. Use the -h option for inline help.
+
 The embedded Wayback is also configured to support access via proxy mode on port 18090.
 
 
