@@ -132,10 +132,12 @@
             <executions>
                <execution>
                   <id>create-launcher-jar</id>
+                  <!-- 
                   <phase>package</phase>
                   <goals>
                      <goal>run</goal>
                   </goals>
+                   -->
                   <configuration>
                      <target xmlns:fx="javafx:com.sun.javafx.tools.ant">
                         <taskdef uri="javafx:com.sun.javafx.tools.ant"
@@ -202,13 +204,12 @@
             <executions>
                <execution>
                   <id>make-assembly</id>
-                  <!-- this is used for inheritance merges -->
+                  <!-- 
                   <phase>package</phase>
-                  <!-- append to the packaging phase. -->
                   <goals>
                      <goal>single</goal>
-                     <!-- goals == mojos -->
                   </goals>
+                   -->
                </execution>
             </executions>
 
