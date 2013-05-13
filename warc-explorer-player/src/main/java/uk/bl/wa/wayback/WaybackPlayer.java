@@ -42,10 +42,13 @@ public class WaybackPlayer {
 		CommandLineParser parser = new PosixParser();
 		String warcDir = null;
 		String workDir = null;
+		String host = "localhost";
 
 		Options options = new Options();
 		options.addOption("h", "help", false, "Show this help message.");
 		options.addOption("i", "index-folder", true, "Specify a custom directory for caching the web archiving index files. Indexes are usually re-built every time you start WaybackPlayer, which might be cumbersome for large indexes. Use this option to specify a folder in which to cache the indexes.");
+		options.addOption("s", "server-name", true, "Specify a server name to use, defaults to 'localhost'")
+		;
 		try {
 			CommandLine line = parser.parse( options, args );
 		   	String cli_args[] = line.getArgs();
@@ -68,6 +71,11 @@ public class WaybackPlayer {
 		   		workDir = line.getOptionValue("i");
 		   	}
 		   	
+		   	// Allow the host to be overridden:
+		   	if( line.hasOption("s") ) {
+		   		host = line.getOptionValue("s");
+		   	}
+		   	
 		} catch (ParseException e1) {
 			e1.printStackTrace();
 			return;
@@ -79,18 +87,23 @@ public class WaybackPlayer {
 		// Default connector for playback:
 		ServerConnector connector = new ServerConnector(server);
 		connector.setPort(18080);
-		connector.setHost("localhost");
+		connector.setHost(host);
 
 		// Connector for Proxy mode:
 		ServerConnector connector2 = new ServerConnector(server);
 		connector2.setPort(18090);
-		connector2.setHost("localhost");
+		connector2.setHost(host);
 		
 		// Attach the two connectors:
 		server.setConnectors( new Connector[] { connector, connector2 } );
 
 		// Set a property so Wayback Spring can find the WARCs etc.
 		System.setProperty("wayback.warc.dir", warcDir);
+		
+		// Set a propery so the host and ports are known:
+		System.setProperty("wayback.host", host);
+		System.setProperty("wayback.port", ""+18080);
+		System.setProperty("wayback.proxy.port", ""+18090);		
 		
 		// TODO Option to wipe it if it's there and looks like ours?
 		Path waywork = null;
