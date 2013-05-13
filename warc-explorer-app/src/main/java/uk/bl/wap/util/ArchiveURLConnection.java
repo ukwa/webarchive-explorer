@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.archive.wayback.core.Resource;
+
 /**
  * @author Andrew Jackson <Andrew.Jackson@bl.uk>
  *
@@ -43,6 +45,8 @@ public class ArchiveURLConnection extends URLConnection {
 	 */
 	@Override
 	public String getHeaderField(String name) {
+		System.err.println("Looking for header: "+name);
+		if( entry == null ) return "";
 		if( entry.header == null ) return "";
 		return archiveIndex.getResource(entry).getHttpHeaders().get(name);
 	}
@@ -53,9 +57,10 @@ public class ArchiveURLConnection extends URLConnection {
 	@Override
 	public Map<String, List<String>> getHeaderFields() {
 		Map<String, List<String>> hfm = new HashMap<String, List<String>>();
+		if( entry == null || archiveIndex.getResource(entry) == null ) return hfm;
 		Map<String, String> headers = archiveIndex.getResource(entry).getHttpHeaders();
 		if( entry.header == null ) return hfm;
-			for( String hf : headers.keySet() ) {
+		for( String hf : headers.keySet() ) {
 			String v = headers.get(hf);
 			ArrayList<String> vlist = new ArrayList<String>();
 			vlist.add( (String)v);
@@ -70,7 +75,11 @@ public class ArchiveURLConnection extends URLConnection {
 	@Override
 	public InputStream getInputStream() throws IOException {
 		connect();
-		return archiveIndex.getResource(entry);
+		Resource r = archiveIndex.getResource(entry);
+		if( r == null ) {
+			throw new IOException("Resource not found.");
+		}
+		return r;
 	}
 
 }

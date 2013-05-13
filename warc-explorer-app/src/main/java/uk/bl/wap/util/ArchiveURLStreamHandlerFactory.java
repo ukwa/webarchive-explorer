@@ -23,7 +23,7 @@ public class ArchiveURLStreamHandlerFactory implements URLStreamHandlerFactory {
 	 */
 	@Override
 	public URLStreamHandler createURLStreamHandler(String protocol) {
-		if( "http".equals(protocol) ) {
+		if( "http".equals(protocol) || "https".equals(protocol) ) {
 			return new ArchiveURLStreamHandler(archive);
 		}
 		return null;

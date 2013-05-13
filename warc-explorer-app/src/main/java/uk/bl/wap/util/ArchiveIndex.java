@@ -6,29 +6,21 @@ package uk.bl.wap.util;
 import static org.archive.io.warc.WARCConstants.HEADER_KEY_TYPE;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.archive.io.ArchiveReader;
 import org.archive.io.ArchiveRecord;
 import org.archive.io.ArchiveRecordHeader;
-import org.archive.io.GZIPMembersInputStream;
 import org.archive.io.arc.ARCReaderFactory;
 import org.archive.io.warc.WARCReaderFactory;
 import org.archive.wayback.core.Resource;
 import org.archive.wayback.exception.ResourceNotAvailableException;
 import org.archive.wayback.resourcestore.resourcefile.ResourceFactory;
-
-import uk.bl.wap.util.warc.WARCRecordUtils;
 
 /**
  * @author Andrew Jackson <Andrew.Jackson@bl.uk>
@@ -104,20 +96,28 @@ public class ArchiveIndex {
 			} catch (MalformedURLException e) {
 			}
 		}
-		System.out.println("Not Found: "+path);
+		System.err.println("Not Found: "+path);
 		return null;
 	}
 	
 	public Resource getResource( ArchiveEntry entry ) {
+		// Get the resource:
 		try {
-			Resource r = ResourceFactory.getResource(file, entry.header.getOffset());
-			return r;
+			if( entry == null ) {
+				System.err.println("ERROR: ArchiveEntry should not be NULL.");
+				return null;
+			} else {
+				return ResourceFactory.getResource(file, entry.header.getOffset());
+			}
 		} catch (ResourceNotAvailableException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			System.err.println("Caught ResourceNotAvailableException: "+e);
+			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			System.err.println("Caught IOException: "+e);
+			e.printStackTrace();
+		} catch (Exception e ) {
+			System.err.println("Caught Exception: "+e);
+			e.printStackTrace();			
 		}
 		return null;
 	}

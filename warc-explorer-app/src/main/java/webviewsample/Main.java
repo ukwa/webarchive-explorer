@@ -38,17 +38,23 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
+    	// Process and command-line arguments:
+    	if( this.getParameters().getUnnamed().size() > 0 ) {
+    		String arg = this.getParameters().getUnnamed().get(0);
+    		URL.setURLStreamHandlerFactory(new ArchiveURLStreamHandlerFactory(arg));
+    	}
         // create scene
         stage.setTitle("Web View");
         scene = new Scene(new Browser(), 750, 500, Color.web("#666970"));
         stage.setScene(scene);
         scene.getStylesheets().add("webviewsample/BrowserToolbar.css");
+    	// Required hack?
+    	java.net.CookieHandler.setDefault(null);
         // show stage
         stage.show();
     }
 
     public static void main(String[] args) {
-    	URL.setURLStreamHandlerFactory(new ArchiveURLStreamHandlerFactory(args[0]));
         launch(args);
     }
 }
@@ -89,10 +95,9 @@ class Browser extends Region {
     public Browser() {
         //apply the styles
         getStyleClass().add("browser");
-
-        // load the home page        
-        webEngine.load("http://news.bbc.co.uk/");
         
+        // load the home page        
+        webEngine.load("http://en.wikipedia.org/wiki/Main_Page");
 
         for (int i = 0; i < captions.length; i++) {
             final Hyperlink hpl = hpls[i] = new Hyperlink(captions[i]);
