@@ -72,5 +72,6 @@
        
        <module>warc-explorer-player</module>
        <module>warc-explorer-wayback</module>
+       <module>warc-explorer-dist</module>
     </modules>
 </project>
