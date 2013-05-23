@@ -5,7 +5,9 @@ WARC Explorer
 Wayback Player
 --------------
 
-Download: [warc-explorer-dist-1.0.0-20130514.091809-1-bin.zip](https://oss.sonatype.org/content/repositories/snapshots/uk/bl/wa/warc-explorer/warc-explorer-dist/1.0.0-SNAPSHOT/warc-explorer-dist-1.0.0-20130514.091809-1-bin.zip)
+Please note that this application requires Java 7.
+
+Download: [warc-explorer-dist-1.0.0-20130523.081303-2-bin.zip](https://oss.sonatype.org/content/repositories/snapshots/uk/bl/wa/warc-explorer/warc-explorer-dist/1.0.0-SNAPSHOT/warc-explorer-dist-1.0.0-20130523.081303-2-bin.zip)
 
 Unpacked it, and then run the appropriate script, e.g.
 
