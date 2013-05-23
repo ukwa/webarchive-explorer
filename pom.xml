@@ -14,9 +14,10 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Web Archive Explorer Project</name>
+    <name>Web Archive Explorer Tools</name>
     <organization>
     	<name>The UK Web Archive</name>
+    	<url>http://www.webarchive.org.uk/</url>
     </organization>
 
    <developers>
@@ -28,6 +29,11 @@
          <organizationUrl>http://www.bl.uk</organizationUrl>
       </developer>
    </developers>
+   
+    <ciManagement>
+       <system>Travis CI</system>
+       <url>https://travis-ci.org/ukwa/warc-explorer</url>
+    </ciManagement>
 
     <build>
         <plugins>
@@ -37,8 +43,8 @@
                 <version>2.3.2</version>
                 <configuration>
                     <debug>true</debug>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -69,7 +75,6 @@
 
     <modules>
        <module>warc-explorer-app</module>
-       
        <module>warc-explorer-player</module>
        <module>warc-explorer-wayback</module>
        <module>warc-explorer-dist</module>

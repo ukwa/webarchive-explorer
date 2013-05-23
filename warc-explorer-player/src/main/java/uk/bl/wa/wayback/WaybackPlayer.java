@@ -7,9 +7,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.PosixFilePermissions;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -106,11 +103,13 @@ public class WaybackPlayer {
 		System.setProperty("wayback.proxy.port", ""+18090);		
 		
 		// TODO Option to wipe it if it's there and looks like ours?
-		Path waywork = null;
+		File waywork = null;
 		if( workDir == null ) {
-			waywork = Files.createTempDirectory("wayback-play", PosixFilePermissions.asFileAttribute( PosixFilePermissions.fromString("rwxr-xr-x")) );
-			System.setProperty("wayback.work.dir", waywork.toFile().getAbsolutePath());
-			waywork.toFile().deleteOnExit();
+			waywork = File.createTempFile("wayback-play","");
+			waywork.delete();
+			waywork.mkdir();
+			System.setProperty("wayback.work.dir", waywork.getAbsolutePath());
+			waywork.deleteOnExit();
 		} else {
 			System.setProperty("wayback.work.dir", workDir);
 			
@@ -150,8 +149,8 @@ public class WaybackPlayer {
 				e.printStackTrace();
 			}
 			if( waywork != null ) {
-				if( waywork.toFile().exists() ) {
-					waywork.toFile().delete();
+				if( waywork.exists() ) {
+					waywork.delete();
 				}
 			}
 		}

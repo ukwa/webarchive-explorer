@@ -3,7 +3,7 @@ jdk:
   - oraclejdk7
 before_install:
  - "echo $JAVA_OPTS"
- - "mvn install -DskipTests"
+ - "mvn install -DskipTests -B"
 before_script:
  - "echo $JAVA_OPTS"
  - "export JAVA_OPTS=-Xmx1024m"

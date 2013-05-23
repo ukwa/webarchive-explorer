@@ -5,11 +5,11 @@ WARC Explorer
 Wayback Player
 --------------
 
-Download: [warc-explorer-player-1.0.0-20130513.145008-2-war-in-jar.jar](https://oss.sonatype.org/content/groups/public/uk/bl/wa/warc-explorer/warc-explorer-player/1.0.0-SNAPSHOT/warc-explorer-player-1.0.0-20130513.145008-2-war-in-jar.jar)
+Download: [warc-explorer-dist-1.0.0-20130514.091809-1-bin.zip](https://oss.sonatype.org/content/repositories/snapshots/uk/bl/wa/warc-explorer/warc-explorer-dist/1.0.0-SNAPSHOT/warc-explorer-dist-1.0.0-20130514.091809-1-bin.zip)
 
-Run as:
+Unpacked it, and then run the appropriate script, e.g.
 
-    % java -jar warc-explorer-player-1.0.0-20130513.145008-2-war-in-jar.jar <warc folder name>
+    % ./bin/wayback-player <warc folder name>
 
 Keep an eye on the logs until the indexer has finished processing your ARC and WARC files, and then go to [http://localhost:18080/wayback/](http://localhost:18080/wayback/) to look at the resources in your warc files.
 
