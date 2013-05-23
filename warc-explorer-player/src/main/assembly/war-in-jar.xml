@@ -23,6 +23,7 @@
       </includes>
       <unpack>false</unpack>
       <scope>runtime</scope>
+      <outputFileNameMapping>${artifactId}${dashClassifier?}.war</outputFileNameMapping>
     </dependencySet>
   </dependencySets>
 </assembly>

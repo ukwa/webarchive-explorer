@@ -78,6 +78,10 @@ public class WaybackPlayer {
 			return;
 		}
 		
+		// Avoid requiring the JDK for Jetty JSP compilation.
+		// See http://www.eclipse.org/jetty/documentation/current/configuring-jsp.html
+		System.setProperty("org.apache.jasper.compiler.disablejsr199","true");
+		
 		// An embedded server:
 		Server server = new Server();
 
@@ -122,7 +126,7 @@ public class WaybackPlayer {
 		wac.setContextPath("/");
 		// this is path to .war OR TO expanded, existing webapp; WILL FIND web.xml and parse it
 		//wac.setWar("/Users/andy/Documents/workspace/waybacks/wayback-play/target/wayback-play");
-		URL resourceUrl = ClassLoader.getSystemClassLoader().getResource("lib/warc-explorer-wayback-1.0.0-SNAPSHOT.war");
+		URL resourceUrl = ClassLoader.getSystemClassLoader().getResource("lib/warc-explorer-player.war");
 		// Copy to tmp space:
 		File tmpWar = File.createTempFile("wayback-player", ".war");
 		tmpWar.deleteOnExit();
