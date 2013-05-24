@@ -17,7 +17,7 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
@@ -86,12 +86,12 @@ public class WaybackPlayer {
 		Server server = new Server();
 
 		// Default connector for playback:
-		ServerConnector connector = new ServerConnector(server);
+		SelectChannelConnector connector = new SelectChannelConnector();
 		connector.setPort(18080);
 		connector.setHost(host);
 
 		// Connector for Proxy mode:
-		ServerConnector connector2 = new ServerConnector(server);
+		SelectChannelConnector connector2 = new SelectChannelConnector();
 		connector2.setPort(18090);
 		connector2.setHost(host);
 		

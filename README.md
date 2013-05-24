@@ -1,6 +1,8 @@
 WARC Explorer
 =============
 
+[![Build Status](https://travis-ci.org/ukwa/warc-explorer.png?branch=master)](https://travis-ci.org/ukwa/warc-explorer)
+
 
 Wayback Player
 --------------
@@ -20,3 +22,4 @@ You can change the server hostname if you wish, using the -s command. The -i com
 The embedded Wayback is also configured to support access via proxy mode on port 18090.
 
 See this page for information about the JDK dependence: http://wiki.eclipse.org/Jetty/Howto/Configure_JSP
+
