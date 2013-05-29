@@ -5,7 +5,7 @@
    <parent>
       <groupId>uk.bl.wa.warc-explorer</groupId>
       <artifactId>warc-explorer-parent</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1-SNAPSHOT</version>
    </parent>
 
    <artifactId>warc-explorer-app</artifactId>
@@ -147,8 +147,7 @@
                         </fx:jar>
                         <attachartifact file="${dist.dir}/${project.build.finalName}-launcher.jar" classifier="launcher" />
                         <!-- Should be signed...
-                        <signjar keyStore="${basedir}\keystore.jks" destdir="${application.dist}"
-                                 alias="certificatekey" storePass="cshcsh" keyPass="cshcsh">
+                        <signjar keyStore="${basedir}\keystore.jks" destdir="${application.dist}" alias="certificatekey" storePass="cshcsh" keyPass="cshcsh">
                             <fileset dir="${application.dist}" includes="*.jar" />
                             <fileset dir="${application.dist}" includes="lib/*.jar" />
                         </signjar>
