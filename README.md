@@ -7,9 +7,9 @@ WARC Explorer
 Wayback Player
 --------------
 
-Please note that this application requires the Java 7 JDK (not just the JRE). It may be possible to run it against a Java 6 JRE, but this is not tested at present.
+Please note that this application requires the Java 7 JDK (not just the JRE). It should be possible to run it against a Java 6 JRE, but this is not tested at present.
 
-Download: [warc-explorer-dist-1.0.0-20130527.202354-4-bin.zip](https://oss.sonatype.org/content/groups/public/uk/bl/wa/warc-explorer/warc-explorer-dist/1.0.0-SNAPSHOT/warc-explorer-dist-1.0.0-20130527.202354-4-bin.zip)
+Download: [warc-explorer-dist-1.0.0-bin.zip](http://repo2.maven.org/maven2/uk/bl/wa/warc-explorer/warc-explorer-dist/1.0.0/warc-explorer-dist-1.0.0-bin.zip)
 
 Unpacked it, and then run the appropriate script, e.g.
 
@@ -23,8 +23,10 @@ The embedded Wayback is also configured to support access via proxy mode on port
 
 See this page for information about the JDK dependence: http://wiki.eclipse.org/Jetty/Howto/Configure_JSP
 
-Errors
-------
+Known Issues
+------------
+
+There are some issues with Wayback playback at the moment, noted here for future resolution.
 
 
 ### Bug, recent regression. ###
