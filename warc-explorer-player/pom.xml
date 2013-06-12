@@ -22,17 +22,17 @@
       <dependency>
          <groupId>org.eclipse.jetty.aggregate</groupId>
          <artifactId>jetty-server</artifactId>
-         <version>8.1.11.v20130520</version>
+         <version>${jetty.version}</version>
       </dependency>
       <dependency>
          <groupId>org.eclipse.jetty.aggregate</groupId>
          <artifactId>jetty-webapp</artifactId>
-         <version>8.1.11.v20130520</version>
+         <version>${jetty.version}</version>
       </dependency>
       <dependency>
          <groupId>org.eclipse.jetty</groupId>
          <artifactId>jetty-jsp</artifactId>
-         <version>8.1.11.v20130520</version>
+         <version>${jetty.version}</version>
       </dependency>
       <dependency>
          <groupId>commons-cli</groupId>

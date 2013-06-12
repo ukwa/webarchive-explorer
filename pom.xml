@@ -82,4 +82,7 @@
        <url>git@github.com:ukwa/warc-explorer.git</url>
        <connection>scm:git:git@github.com:ukwa/warc-explorer.git</connection>
     </scm>
+    <properties>
+       <jetty.version>8.1.11.v20130520</jetty.version>
+    </properties>
 </project>

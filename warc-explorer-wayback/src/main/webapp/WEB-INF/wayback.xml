@@ -15,7 +15,9 @@
     <property name="properties">
       <value>
         wayback.basedir=${wayback.work.dir}
-        wayback.urlprefix=http://${wayback.host}:${wayback.port}
+        wayback.urlprefix=http://${wayback.host}:${wayback.webapp.port}
+        wayback.webapp.port=18080
+        wayback.proxy.port=18090
       </value>
     </property>
   </bean>
@@ -145,11 +147,23 @@
     get them back on track.
   -->
   <bean name="+" class="org.archive.wayback.webapp.ServerRelativeArchivalRedirect">
-    <property name="matchPort" value="${wayback.port}" />
+    <property name="matchPort" value="${wayback.webapp.port}" />
     <property name="useCollection" value="true" />
   </bean>
+  
+  <!-- 
+   at org.archive.wayback.util.webapp.RequestFilter.loadRequestMapper(RequestFilter.java:175)
+   at org.archive.wayback.util.webapp.RequestFilter.init(RequestFilter.java:105)
+   at org.eclipse.jetty.servlet.FilterHolder.doStart(FilterHolder.java:119)
+   at org.archive.wayback.webapp.AccessPoint.doStart(AccessPoint.java:119)
+   at org.archive.wayback.util.webapp.RequestMapper.go(RequestMapper.java:1)
+   at org.archive.wayback.util.webapp.RequestFilter.go(RequestFilter.java:1)
+  <alias name="waybackAccessPoint" alias="wayback"/>
+   -->
 
-  <bean name="18080:wayback" class="org.archive.wayback.webapp.AccessPoint">
+  <bean name="wayback" class="org.archive.wayback.webapp.AccessPoint">
+    <property name="accessPointPath" value="${wayback.webapp.port}:wayback"/>
+  
     <property name="serveStatic" value="true" />
     <property name="bounceToReplayPrefix" value="false" />
     <property name="bounceToQueryPrefix" value="false" />
@@ -233,7 +247,9 @@
   content in your collections.
 -->
   <import resource="MementoReplay.xml"/>
-  <bean name="18080:memento" parent="18080:wayback">
+  <bean name="memento" parent="wayback">
+    <property name="accessPointPath" value="${wayback.webapp.port}:memento"/>
+  
     <property name="replayPrefix" value="${wayback.urlprefix}/memento/" />
     <property name="queryPrefix" value="${wayback.urlprefix}/list/" />
 	<property name="configs">
@@ -268,7 +284,9 @@
   </bean>
 
 
-  <bean name="18080:list" parent="18080:memento">
+  <bean name="list" parent="memento">
+    <property name="accessPointPath" value="${wayback.webapp.port}:list"/>
+    
     <property name="replayPrefix" value="${wayback.urlprefix}/memento/" />
     <property name="queryPrefix" value="${wayback.urlprefix}/list/" />
     <property name="staticPrefix" value="${wayback.urlprefix}/list/" />
@@ -304,6 +322,8 @@
  -->
  <!--
   <bean name="8080:opensearch" parent="8080:wayback">
+    <property name="accessPointPath" value="${wayback.webapp.port}:opensearch"/>
+    
     <property name="queryPrefix" value="${wayback.urlprefix}/opensearch/" />
     <property name="query">
       <bean class="org.archive.wayback.query.Renderer">
@@ -362,19 +382,21 @@
          in your Tomcat's server.xml file.
  -->
   <import resource="ProxyReplay.xml"/>
-  <bean name="18090" parent="18080:wayback">
+  <bean name="proxy" parent="wayback">
+    <property name="accessPointPath" value="${wayback.proxy.port}"/>
+    
     <property name="serveStatic" value="true" />
     <property name="bounceToReplayPrefix" value="false" />
     <property name="bounceToQueryPrefix" value="false" />
     <property name="refererAuth" value="" />
 
-    <property name="staticPrefix" value="http://${wayback.host}:18090/" />
-    <property name="replayPrefix" value="http://${wayback.host}:18090/" />
-    <property name="queryPrefix" value="http://${wayback.host}:18090/" />
+    <property name="staticPrefix" value="http://${wayback.host}:${wayback.proxy.port}/" />
+    <property name="replayPrefix" value="http://${wayback.host}:${wayback.proxy.port}/" />
+    <property name="queryPrefix" value="http://${wayback.host}:${wayback.proxy.port}/" />
     <property name="replay" ref="proxyreplay" />
     <property name="uriConverter">
       <bean class="org.archive.wayback.proxy.RedirectResultURIConverter">
-        <property name="redirectURI" value="http://${wayback.host}:18090/jsp/QueryUI/Redirect.jsp" />
+        <property name="redirectURI" value="http://${wayback.host}:${wayback.proxy.port}/jsp/QueryUI/Redirect.jsp" />
       </bean>
     </property>
     <property name="parser">
