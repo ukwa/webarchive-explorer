@@ -31,6 +31,8 @@ There are some issues with Wayback playback at the moment, noted here for future
 
 ### Bug, recent regression. ###
 
+As noted in [this comment](https://github.com/ukwa/warc-explorer/issues/5#issuecomment-18516339)
+
 With a compressed WARC, with 1.8.0-SNAPSHOT, with a specific WARC.GZ:
 java.io.IOException: /Users/andy/Documents/workspace/warc-explorer/warcs-3/drupalib.interoperating.info.warc.gz is not a WARC file.
     at org.archive.io.warc.WARCReaderFactory.getArchiveReader(WARCReaderFactory.java:87)
