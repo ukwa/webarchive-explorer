@@ -3,7 +3,6 @@ WARC Explorer
 
 [![Build Status](https://travis-ci.org/ukwa/warc-explorer.png?branch=master)](https://travis-ci.org/ukwa/warc-explorer)
 
-
 Wayback Player
 --------------
 
@@ -31,30 +30,39 @@ There are some issues with Wayback playback at the moment, noted here for future
 
 ### Bug, recent regression. ###
 
-With a compressed WARC, with 1.8.0-SNAPSHOT, with a specific WARC.GZ:
-java.io.IOException: /Users/andy/Documents/workspace/warc-explorer/warcs-3/drupalib.interoperating.info.warc.gz is not a WARC file.
-    at org.archive.io.warc.WARCReaderFactory.getArchiveReader(WARCReaderFactory.java:87)
-    at org.archive.io.ArchiveReaderFactory.getArchiveReader(ArchiveReaderFactory.java:103)
-    at org.archive.io.warc.WARCReaderFactory.get(WARCReaderFactory.java:66)
-    at org.archive.wayback.resourcestore.indexer.WarcIndexer.iterator(WarcIndexer.java:71)
-    at org.archive.wayback.resourcestore.indexer.IndexWorker.indexFile(IndexWorker.java:136)
-    at org.archive.wayback.resourcestore.indexer.IndexWorker.doWork(IndexWorker.java:110)
-    at org.archive.wayback.resourcestore.indexer.IndexWorker$WorkerThread.run(IndexWorker.java:244)
+As noted in [this comment](https://github.com/ukwa/warc-explorer/issues/5#issuecomment-18516339), and appears to arise due to problems with the 
+way wget-1.14 build gzip streams (see [this other issue](https://github.com/ukwa/warc-discovery/issues/1))
 
-This seems to stem from here:
+With a compressed WARC, with 1.8.0-SNAPSHOT, with a specific WARC.GZ:
+
+    java.io.IOException: /Users/andy/Documents/workspace/warc-explorer/warcs-3/drupalib.interoperating.info.warc.gz is not a WARC file.
+        at org.archive.io.warc.WARCReaderFactory.getArchiveReader(WARCReaderFactory.java:87)
+        at org.archive.io.ArchiveReaderFactory.getArchiveReader(ArchiveReaderFactory.java:103)
+        at org.archive.io.warc.WARCReaderFactory.get(WARCReaderFactory.java:66)
+        at org.archive.wayback.resourcestore.indexer.WarcIndexer.iterator(WarcIndexer.java:71)
+        at org.archive.wayback.resourcestore.indexer.IndexWorker.indexFile(IndexWorker.java:136)
+        at org.archive.wayback.resourcestore.indexer.IndexWorker.doWork(IndexWorker.java:110)
+        at org.archive.wayback.resourcestore.indexer.IndexWorker$WorkerThread.run(IndexWorker.java:244)
+
+This seems to stem from [here](https://github.com/internetarchive/ia-web-commons/blob/master/src/main/java/org/archive/format/gzip/GZIPDecoder.java#L129):
+
     org.archive.io.warc.WARCReaderFactory.getArchiveReader(File, long)
     and this test, failing to spot that the file is compressed:
     org.archive.io.warc.WARCReaderFactory.testCompressedWARCFile(File)
-    which relies on:
+
+which relies on:
+
     org.archive.util.ArchiveUtils.isGzipped(InputStream)
     org.archive.format.gzip.GZIPDecoder.parseHeader(InputStream)
+
 Not sure why this is failing to return TRUE, but maybe this is tripping on the wget WARC variant.
 
 
 ### Bug, long-standing fault/limitation. ###
 
 With an uncompressed WARC:
-org.archive.wayback.exception.ResourceNotAvailableException: /Users/andy/Documents/workspace/warc-explorer/warcs-2/drupalib.interoperating.info.warc - java.util.zip.ZipException: Not in GZIP format
+
+    org.archive.wayback.exception.ResourceNotAvailableException: /Users/andy/Documents/workspace/warc-explorer/warcs-2/drupalib.interoperating.info.warc - java.util.zip.ZipException: Not in GZIP format
     at org.archive.wayback.resourcestore.LocationDBResourceStore.retrieveResource(LocationDBResourceStore.java:96)
     at org.archive.wayback.webapp.AccessPoint.getResource(AccessPoint.java:533)
     at org.archive.wayback.webapp.AccessPoint.handleReplay(AccessPoint.java:676)
@@ -86,9 +94,13 @@ org.archive.wayback.exception.ResourceNotAvailableException: /Users/andy/Documen
     at java.lang.Thread.run(Thread.java:722)
 
 This boils down to the assumption that the WARCS are compressed in:
+
     org.archive.io.warc.WARCReaderFactory.getArchiveReader(String, InputStream, boolean)
-    Called by:
+    
+Called by:
+
     org.archive.wayback.resourcestore.LocationDBResourceStore.retrieveResource(CaptureSearchResult)
 
 Note also the clumsy calling class, which duplicated isArc/isWarc logic:
+
     org.archive.wayback.resourcestore.resourcefile.ResourceFactory.getResource(File, long)
