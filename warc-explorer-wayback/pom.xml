@@ -15,9 +15,9 @@
 
    <dependencies>
       <dependency>
-         <groupId>org.archive.wayback</groupId>
-         <artifactId>wayback-webapp</artifactId>
-         <version>1.7.1-SNAPSHOT</version>
+         <groupId>org.netpreserve.openwayback</groupId>
+         <artifactId>openwayback-webapp</artifactId>
+         <version>2.0.0.BETA.1-SNAPSHOT</version>
          <type>war</type>
          <scope>runtime</scope>
       </dependency>
@@ -38,8 +38,8 @@
                         build -->
                   </overlay>
                   <overlay>
-                     <groupId>org.archive.wayback</groupId>
-                     <artifactId>wayback-webapp</artifactId>
+                     <groupId>org.netpreserve.openwayback</groupId>
+                     <artifactId>openwayback-webapp</artifactId>
                   </overlay>
                </overlays>
             </configuration>
@@ -51,7 +51,7 @@
             <configuration>
                <connectors>
                   <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                     <port>18090</port>
+                     <port>18080</port>
                      <maxIdleTime>60000</maxIdleTime>
                   </connector>
                </connectors>
