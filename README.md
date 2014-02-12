@@ -1,7 +1,7 @@
-WARC Explorer
-=============
+Web Archive Explorer
+====================
 
-[![Build Status](https://travis-ci.org/ukwa/warc-explorer.png?branch=master)](https://travis-ci.org/ukwa/warc-explorer)
+[![Build Status](https://travis-ci.org/ukwa/webarchive-explorer.png?branch=master)](https://travis-ci.org/ukwa/webarchive-explorer)
 
 Wayback Player
 --------------
@@ -30,8 +30,8 @@ There are some issues with Wayback playback at the moment, noted here for future
 
 ### Bug, recent regression. ###
 
-As noted in [this comment](https://github.com/ukwa/warc-explorer/issues/5#issuecomment-18516339), and appears to arise due to problems with the 
-way wget-1.14 build gzip streams (see [this other issue](https://github.com/ukwa/warc-discovery/issues/1))
+As noted in [this comment](https://github.com/ukwa/webarchive-explorer/issues/5#issuecomment-18516339), and appears to arise due to problems with the 
+way wget-1.14 build gzip streams (see [this other issue](https://github.com/ukwa/webarchive-discovery/issues/1))
 
 With a compressed WARC, with 1.8.0-SNAPSHOT, with a specific WARC.GZ:
 
