@@ -36,14 +36,14 @@
          <systemPath>${javafx.runtime.lib.jar}</systemPath>
       </dependency>
       <dependency>
-         <groupId>org.archive.heritrix</groupId>
-         <artifactId>heritrix-commons</artifactId>
-         <version>3.1.0</version>
+				<groupId>org.netpreserve.commons</groupId>
+				<artifactId>webarchive-commons</artifactId>
+				<version>1.1.2</version>
       </dependency>
       <dependency>
-         <groupId>org.archive.wayback</groupId>
-         <artifactId>wayback-core</artifactId>
-         <version>1.7.0</version>
+<groupId>org.netpreserve.openwayback</groupId>
+         <artifactId>openwayback-core</artifactId>
+         <version>2.0.0.BETA.2</version>
       </dependency>
       <dependency>
          <groupId>batik</groupId>
