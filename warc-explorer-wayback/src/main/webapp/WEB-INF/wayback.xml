@@ -28,20 +28,20 @@
 <!--
 	The ResourceFileLocationDB implementation to use for mapping ARC/WARC names
 	to absolute paths/URLs via a BDBJE database.
--->
   <bean id="resourcefilelocationdb" class="org.archive.wayback.resourcestore.locationdb.BDBResourceFileLocationDB">
     <property name="bdbPath" value="${wayback.basedir}/file-db/db/" />
     <property name="bdbName" value="DB1" />
     <property name="logPath" value="${wayback.basedir}/file-db/db.log" />
   </bean>
+-->
 <!--
 	The following bean provides an alternate flat-file based LocationDB
 	implementation.
 -->
-<!--
   <bean id="resourcefilelocationdb" class="org.archive.wayback.resourcestore.locationdb.FlatFileResourceFileLocationDB">
     <property name="path" value="${wayback.basedir}/path-index.txt" />
   </bean>
+<!--
 -->
 <!--
     To enable manual management of, or remote access to the above locationDB,
@@ -71,9 +71,9 @@
 	ARC/WARC files are located, see the file BDBCollection.xml.
 -->
 
-  <import resource="BDBCollection.xml"/>
-<!--
   <import resource="CDXCollection.xml"/>
+<!--
+  <import resource="BDBCollection.xml"/>
   <import resource="RemoteCollection.xml"/>
   <import resource="NutchCollection.xml"/>
 -->
@@ -146,7 +146,8 @@
     not successfully rewritten, resolving them against the referring URL to
     get them back on track.
   -->
-  <bean name="+" class="org.archive.wayback.webapp.ServerRelativeArchivalRedirect">
+  <bean name="serverRelativeArchivalRedirect" class="org.archive.wayback.webapp.ServerRelativeArchivalRedirect">
+    <property name="accessPointPath" value="+"/>
     <property name="matchPort" value="${wayback.webapp.port}" />
     <property name="useCollection" value="true" />
   </bean>
@@ -187,9 +188,9 @@
     <property name="exactHostMatch" value="true" />
 	-->
     
-    <property name="collection" ref="localbdbcollection" />
-<!--
     <property name="collection" ref="localcdxcollection" />
+<!--
+    <property name="collection" ref="localbdbcollection" />
 -->
 
     <property name="replay" ref="archivalurlreplay" />
@@ -325,9 +326,7 @@
     <property name="queryPrefix" value="http://${wayback.host}:${wayback.proxy.port}/" />
     <property name="replay" ref="proxyreplay" />
     <property name="uriConverter">
-      <bean class="org.archive.wayback.proxy.RedirectResultURIConverter">
-        <property name="redirectURI" value="http://${wayback.host}:${wayback.proxy.port}/jsp/QueryUI/Redirect.jsp" />
-      </bean>
+      <bean class="org.archive.wayback.proxy.ProxyHttpsResultURIConverter"/>
     </property>
     <property name="parser">
       <bean class="org.archive.wayback.proxy.ProxyRequestParser">

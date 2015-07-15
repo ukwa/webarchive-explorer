@@ -6,7 +6,11 @@ package uk.bl.wa.wayback;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -15,6 +19,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.io.IOUtils;
+import org.archive.wayback.resourcestore.indexer.IndexWorker;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
@@ -115,10 +120,38 @@ public class WaybackPlayer {
 			System.setProperty("wayback.work.dir", waywork.getAbsolutePath());
 			waywork.deleteOnExit();
 		} else {
+			waywork = new File(workDir);
 			System.setProperty("wayback.work.dir", workDir);
 			
 		}
 		System.err.println("Indexes held in: "+System.getProperty("wayback.work.dir") );
+		
+		// Prior to start up, generate CDX files and path-index.txt file and put them in wayback.work.dir:
+		File wdf = new File(warcDir);
+		List<String> paths = new ArrayList<String>();
+		for( File wf : wdf.listFiles()) {
+			paths.add(wf.getName()+"\t"+wf.getAbsolutePath());
+			System.out.println("LINE: "+wf.getAbsolutePath());
+			// CDX generation:
+			File cdxFile = new File(waywork, wf.getName() + ".cdx");
+			if (!cdxFile.exists()) {
+				System.out.println("Generating " + cdxFile.getPath() + " from "
+						+ wf.getPath() + "...");
+				IndexWorker.main(new String[] { wf.getAbsolutePath(),
+						cdxFile.getAbsolutePath() });
+			} else {
+				System.out.println("The CDX " + cdxFile.getPath() + " for "
+						+ wf.getPath() + " already exists.");
+			}
+		}
+
+		// For path-index.txt:
+		Collections.sort(paths);
+		PrintWriter writer = new PrintWriter(new File(waywork,"path-index.txt"), "UTF-8");
+		for( String path : paths ) {
+			writer.println(path);
+		}
+		writer.close();
 		
 
 		// Set up the Wayback web app:
