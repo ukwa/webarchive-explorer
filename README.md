@@ -8,7 +8,7 @@ Wayback Player
 
 Please note that this application requires the Java 7 JDK (not just the JRE). It should be possible to run it against a Java 6 JRE, but this is not tested at present.
 
-Download: [warc-explorer-dist-1.0.0-bin.zip](http://repo2.maven.org/maven2/uk/bl/wa/warc-explorer/warc-explorer-dist/1.0.0/warc-explorer-dist-1.0.0-bin.zip)
+Download: [warc-explorer-dist-1.0.0-bin.zip](https://search.maven.org/remotecontent?filepath=uk/bl/wa/warc-explorer/warc-explorer-dist/1.0.0/warc-explorer-dist-1.0.0-bin.zip)
 
 Unpacked it, and then run the appropriate script, e.g.
 
